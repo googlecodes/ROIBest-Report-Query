@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROIBest Report Query</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .row input[type="text"], .row select {
+            flex: 1;
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .row button {
+            margin: 5px;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .row button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap; /* Preserve whitespace and allow line breaks */
+            word-wrap: break-word;
+        }
+        @media (max-width: 260px) {
+            .row {
+                flex-direction: column;
+            }
+            #copy-btn {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <input type="text" id="input-value" placeholder="Enter link_id or promote_url_id">
+            <button onclick="submitRequest()">提交</button>
+        </div>
+        <div class="row">
+            <select id="request-type">
+                <option value="link_id">link_id</option>
+                <option value="promote_url_id">promote_url_id</option>
+            </select>
+            <button id="copy-btn" data-clipboard-target="#response-pre">复制</button>
+        </div>
+        <pre id="response-pre"></pre>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+    <script>
+        function submitRequest() {
+            const inputValue = document.getElementById('input-value').value;
+            const requestType = document.getElementById('request-type').value;
+            let url;
+
+            if (requestType === 'link_id') {
+                url = 'https://pwa-backend-prod.roibest.com/inside/adReportQueryByLinkId';
+            } else {
+                url = 'https://pwa-backend-prod.roibest.com/inside/adReportQueryByPromoteUrlId';
+            }
+
+            const payload = {
+                [requestType]: inputValue
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response-pre').textContent = JSON.stringify(data, null, 4);
+            })
+            .catch(error => {
+                document.getElementById('response-pre').textContent = 'Error: ' + error;
+            });
+        }
+
+        new ClipboardJS('#copy-btn');
+    </script>
+</body>
+</html>
