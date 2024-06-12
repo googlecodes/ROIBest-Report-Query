@@ -1,121 +1,297 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROIBest Report Query</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            box-sizing: border-box;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .row input[type="text"], .row select {
-            flex: 1;
-            margin: 5px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .row button {
-            margin: 5px;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-        .row button:hover {
-            background-color: #0056b3;
-        }
-        pre {
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #f5f5f5;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            overflow-x: auto;
-            white-space: pre-wrap; /* Preserve whitespace and allow line breaks */
-            word-wrap: break-word;
-        }
-        @media (max-width: 260px) {
-            .row {
-                flex-direction: column;
-            }
-            #copy-btn {
-                margin-top: 10px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROIBest Report Query</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      box-sizing: border-box;
+      background: linear-gradient(135deg, #667eea, #764ba2, #6B8DD6, #8E37D7);
+      background-size: 800% 800%;
+      animation: gradientBG 30s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .row input[type="text"],
+    .row select {
+      flex: 1;
+      margin: 5px;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .row input[type="text"]:focus,
+    .row select:focus {
+      box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+    }
+
+    .row button {
+      margin: 5px;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .row button:hover {
+      box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+    }
+
+    pre {
+      margin: 10px 0;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border: none;
+      border-radius: 4px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 260px) {
+      .row {
+        flex-direction: column;
+      }
+
+      #copy-btn {
+        margin-top: 10px;
+      }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+      border: none;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      height: 100vh;
+    }
+
+    .json-response-pre {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border: none;
+      border-radius: 4px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      width: 100%;
+      box-sizing: border-box;
+      height: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .copyright {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      text-decoration: none;
+      background: linear-gradient(45deg, #9370DB, #BA55D3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: copyrightGlow 2s infinite alternate;
+    }
+
+    @keyframes copyrightGlow {
+      0% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+      }
+      100% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="row">
-            <input type="text" id="input-value" placeholder="Enter link_id or promote_url_id">
-            <button onclick="submitRequest()">提交</button>
-        </div>
-        <div class="row">
-            <select id="request-type">
-                <option value="link_id">link_id</option>
-                <option value="promote_url_id">promote_url_id</option>
-            </select>
-            <button id="copy-btn" data-clipboard-target="#response-pre">复制</button>
-        </div>
-        <pre id="response-pre"></pre>
+  <div class="container">
+    <div class="row">
+      <input type="text" id="input-value" placeholder="Enter link_id or promote_url_id">
+      <button onclick="submitRequest()">提交</button>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
-    <script>
-        function submitRequest() {
-            const inputValue = document.getElementById('input-value').value;
-            const requestType = document.getElementById('request-type').value;
-            let url;
-
-            if (requestType === 'link_id') {
-                url = 'https://pwa-backend-prod.roibest.com/inside/adReportQueryByLinkId';
-            } else {
-                url = 'https://pwa-backend-prod.roibest.com/inside/adReportQueryByPromoteUrlId';
-            }
-
-            const payload = {
-                [requestType]: inputValue
-            };
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('response-pre').textContent = JSON.stringify(data, null, 4);
-            })
-            .catch(error => {
-                document.getElementById('response-pre').textContent = 'Error: ' + error;
+    <div class="row">
+      <select id="request-type">
+        <option value="link_id">link_id</option>
+        <option value="promote_url_id">promote_url_id</option>
+      </select>
+      <button id="copy-btn" data-clipboard-target="#response-pre">复制</button>
+    </div>
+    <pre id="response-pre"></pre>
+  </div>
+  <div class="container">
+    <pre id="json-response-pre" class="json-response-pre"></pre>
+  </div>
+  <a href="https://t.me/JackPWA" class="copyright">© 2024 ROIBest</a>
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+  <script>
+    function submitRequest() {
+      const inputValue = document.getElementById('input-value').value;
+      const requestType = document.getElementById('request-type').value;
+      let url;
+      if (requestType === 'link_id') {
+        url = 'https://pwa-backend-prod.roibest.com/inside/adReportQueryByLinkId';
+      } else {
+        url = 'https://pwa-backend-prod.roibest.com/inside/adReportQueryByPromoteUrlId';
+      }
+      const payload = {
+        [requestType]: inputValue
+      };
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(response => response.json())
+        .then(data => {
+          const preElement = document.getElementById('response-pre');
+          const jsonPreElement = document.getElementById('json-response-pre');
+          preElement.innerHTML = ''; // 清空原有内容
+          jsonPreElement.innerHTML = ''; // 清空原有JSON内容
+          if (data.code === 0 && data.data.length > 0) {
+            const table = document.createElement('table');
+            table.style.width = '100%';
+            table.style.borderCollapse = 'collapse';
+            const headerRow = document.createElement('tr');
+            // 表头
+            const headers = ['id', 'project_id', 'is_report', 'updated_at', 'link_id', 'fbclid', 'event_name', 'source_url', 'extra', 'pixel_id', 'test_code', 'access_token', 'events_received', 'fbtrace_id'];
+            headers.forEach(header => {
+              const th = document.createElement('th');
+              // 修改表头显示内容
+              if (header === 'project_id') {
+                th.textContent = 'APPID';
+              } else if (header === 'event_name') {
+                th.textContent = 'event_name（事件）';
+              } else if (header === 'updated_at') {
+                th.textContent = '时间';
+              } else if (header === 'fbclid') {
+                th.textContent = 'fbclid（广告参数）';
+              } else if (header === 'source_url') {
+                th.textContent = 'source_url（来源地址）';
+              } else if (header === 'pixel_id') {
+                th.textContent = 'pixel_id';
+              } else if (header === 'events_received') {
+                th.textContent = 'events_received（广告响应）';
+              } else if (header === 'fbtrace_id') {
+                th.textContent = 'fbtrace_id（广告跟踪）';
+              } else if (header === 'is_report') {
+                th.textContent = '上报状态';
+              } else {
+                th.textContent = header;
+              }
+              th.style.border = '1px solid #ccc';
+              th.style.padding = '10px';
+              headerRow.appendChild(th);
             });
-        }
-
-        new ClipboardJS('#copy-btn');
-    </script>
+            table.appendChild(headerRow);
+            data.data.forEach(item => {
+              const row = document.createElement('tr');
+              headers.forEach(header => {
+                const td = document.createElement('td');
+                // 判断表头字段
+                if (header === 'link_id' || header === 'fbclid' || header === 'event_name' || header === 'source_url' || header === 'pixel_id' || header === 'test_code' || header === 'access_token') {
+                  td.textContent = item.fb_report_info.request_params[header]; // 此处取值
+                } else if (header === 'extra') { // [object Object] 转换为字符串
+                  td.textContent = JSON.stringify(item.fb_report_info.request_params[header]);
+                } else if (header === 'events_received' || header === 'fbtrace_id') { // 判断表头字段
+                  td.textContent = item.fb_report_info.res.data[header];// 此处取值
+                } else {
+                  td.textContent = item[header];
+                }
+                td.style.border = '1px solid #ccc';
+                td.style.padding = '10px';
+                row.appendChild(td);
+              });
+              table.appendChild(row);
+            });
+            preElement.appendChild(table);
+            const formattedJSON = JSON.stringify(data, null, 4); // 格式化JSON
+            jsonPreElement.textContent = formattedJSON;
+          } else {
+            preElement.textContent = '没有找到数据';
+            jsonPreElement.textContent = '没有找到数据';
+          }
+        })
+        .catch(error => {
+          preElement.textContent = 'Error: ' + error;
+          jsonPreElement.textContent = 'Error: ' + error;
+        });
+    }
+    new ClipboardJS('#copy-btn');
+  </script>
 </body>
+
 </html>
