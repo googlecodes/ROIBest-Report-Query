@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -196,6 +197,11 @@
   <a href="https://t.me/JackPWA" class="copyright">© 2024 ROIBest</a>
   <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
   <script>
+  
+  // 在脚本开始时获取 pre 元素
+const preElement = document.getElementById('response-pre');
+const jsonPreElement = document.getElementById('json-response-pre');
+
     function submitRequest() {
       const inputValue = document.getElementById('input-value').value;
       const requestType = document.getElementById('request-type').value;
@@ -217,8 +223,7 @@
       })
         .then(response => response.json())
         .then(data => {
-          const preElement = document.getElementById('response-pre');
-          const jsonPreElement = document.getElementById('json-response-pre');
+
           preElement.innerHTML = ''; // 清空原有内容
           jsonPreElement.innerHTML = ''; // 清空原有JSON内容
           if (data.code === 0 && data.data.length > 0) {
@@ -236,7 +241,7 @@
               } else if (header === 'event_name') {
                 th.textContent = 'event_name（事件）';
               } else if (header === 'updated_at') {
-                th.textContent = '时间';
+                th.textContent = '时间（utc+0）';
               } else if (header === 'fbclid') {
                 th.textContent = 'fbclid（广告参数）';
               } else if (header === 'source_url') {
@@ -267,7 +272,8 @@
                 } else if (header === 'extra') { // [object Object] 转换为字符串
                   td.textContent = JSON.stringify(item.fb_report_info.request_params[header]);
                 } else if (header === 'events_received' || header === 'fbtrace_id') { // 判断表头字段
-                  td.textContent = item.fb_report_info.res.data[header];// 此处取值
+                  // 检查 res.data 是否存在
+                  td.textContent = item.fb_report_info.res.data && item.fb_report_info.res.data[header] || 'N/A';// 此处取值
                 } else {
                   td.textContent = item[header];
                 }
